@@ -6,7 +6,10 @@ A simple linear regression model for disease prediction.
 import joblib
 import pandas as pd
 from cyclopts import App
+from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Ridge
+
 
 app = App()
 
@@ -23,11 +26,20 @@ def train(train_data: str, model: str):
         Path where the trained model will be saved.
     """
     df = pd.read_csv(train_data)
-    features = df[["rainfall", "mean_temperature"]].fillna(0)
+    # features = df[["rainfall", "mean_temperature"]].fillna(0)
+    features = df[["rainfall"]].fillna(0)
     target = df["disease_cases"].fillna(0)
 
-    reg = LinearRegression()
-    reg.fit(features, target)
+    # reg = LinearRegression()
+    reg = Ridge(alpha=1.0)
+
+    #Added to test:
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(features)
+
+    # reg.fit(features, target)
+    reg.fit(X_scaled, target)
+
     joblib.dump(reg, model)
     print(f"Model saved to {model}")
 
@@ -49,7 +61,8 @@ def predict(model: str, historic_data: str, future_data: str, out_file: str):
     """
     reg = joblib.load(model)
     future_df = pd.read_csv(future_data)
-    features = future_df[["rainfall", "mean_temperature"]].fillna(0)
+    # features = future_df[["rainfall", "mean_temperature"]].fillna(0)
+    features = future_df[["rainfall"]].fillna(0)
 
     predictions = reg.predict(features)
     output_df = future_df[["time_period", "location"]].copy()
