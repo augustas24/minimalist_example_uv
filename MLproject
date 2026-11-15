@@ -2,16 +2,28 @@ name: minimalist_example_uv
 
 uv_env: pyproject.toml
 
+required_covariates:
+  - rainfall
+
+supported_period_type: monthly
+target: disease_cases
+
+meta_data:
+  display_name: Minimalist example (uv)
+  description: Just a test of how registration mechanism works.
+  author: augustas24
+  author_assessed_status: orange
+
 entry_points:
   train:
     parameters:
       train_data: str
       model: str
-    command: "python main.py train {train_data} {model}"
+    command: "python model.py train {train_data} {model}"
   predict:
     parameters:
       historic_data: str
       future_data: str
       model: str
       out_file: str
-    command: "python main.py predict {model} {historic_data} {future_data} {out_file}"
+    command: "python model.py predict {model} {historic_data} {future_data} {out_file}"
