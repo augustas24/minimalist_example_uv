@@ -26,8 +26,8 @@ services:
       WORKERS: 1
       # CHAPKIT_TEMP_DIR: /tmp  # Override temp directory for ML workspaces
       # When integrating with chap-core, register this service on startup:
-      # SERVICEKIT_ORCHESTRATOR_URL: http://chap:8000/v2/services/$$register
-      # SERVICEKIT_REGISTRATION_KEY: ${SERVICEKIT_REGISTRATION_KEY:-}
+      SERVICEKIT_ORCHESTRATOR_URL: http://chap:8000/v2/services/$$register
+      SERVICEKIT_REGISTRATION_KEY: ${SERVICEKIT_REGISTRATION_KEY:-}
     restart: unless-stopped
     # No `networks:` directive on purpose. Compose puts every service on the project's
     # default network, so standalone (`docker compose up`) just works, and overlay use
@@ -36,9 +36,9 @@ services:
     # chap-core reach each other by hostname. Pinning a custom network here would
     # isolate the service from the parent stack.
     # When integrating with chap-core, wait for it to be healthy first:
-    # depends_on:
-    #   chap:
-    #     condition: service_healthy
+    depends_on:
+      chap:
+        condition: service_healthy
 
 volumes:
   ck_minimalist-example-uv_data:
